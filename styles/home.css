@@ -15,10 +15,12 @@
     text-align: center;
     gap: 10px;
     padding: 5px 25px 5px 25px;
+    max-width: 1000px;
+    margin: auto;
 }
 
 .home .kategorijos-container a {
-    width: calc(50% - 10px);
+    width: calc(25% - 20px);
     display: grid;
     place-items: center;
     border: black 1px solid;
