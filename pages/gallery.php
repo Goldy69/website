@@ -19,7 +19,7 @@ $images = scandir("./images/$path");
     <div class="gallery-container">
         <?php
         for ($i = 2; $i < sizeof($images); $i++) {
-            $url = "images/".$images[$i];
+            $url = "images/$path/".$images[$i];
             echo "<img class='gallery-img' src='$url' alt='$images[$i]'/>";
         }
         ?>
