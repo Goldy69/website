@@ -42,7 +42,7 @@ $GLOBALS["kategorijos"] = [
 <header>
 
     <div class="navbar">
-        <a href="home">Website</a>
+        <a href="home">big boi place</a>
         <a href="kontaktai">Kontaktai</a>
         <a href="paskyra">Paskyra</a>
         <div class="dropdown">
