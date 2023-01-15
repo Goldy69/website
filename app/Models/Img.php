@@ -7,11 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Img extends Model
 {
-    protected $fillable = ['name', 'category'];
+    protected $fillable = ['name', 'category_id'];
 
     use HasFactory;
 
     public function user(){
         return $this->hasOne(User::class);
+    }
+
+    public function category() {
+        return $this->hasOne(Category::class, 'id', 'category_id');
     }
 }

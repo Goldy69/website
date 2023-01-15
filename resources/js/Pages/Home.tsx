@@ -3,15 +3,18 @@ import { Props } from '@/types/props.type';
 import { useDarkMode } from '@/hooks/useDarkMode';
 import { Navbar } from '@/Components/Navbar';
 import { useState } from 'react';
-import { useCategories } from '@/hooks/useCategories';
+
+export interface Category{
+    name: string;
+}
 
 export default function Home(props: Props<{
     canLogin:       boolean;
     canRegister:    boolean;
     laravelVersion: string;
     phpVersion:     string;
+    categories:     Category[];
 }>) {
-    const [categories, setCategories] = useCategories();
 
     return (
         <>
@@ -23,9 +26,9 @@ export default function Home(props: Props<{
                 <main className='px-4 py-2 flex flex-col gap-4'>
                     <h1 className='text-2xl'>Categories</h1>
                     <div className='flex flex-wrap  gap-2 items-start'>
-                        {categories.map((value, index, array)=><div key={`category_${index}`} className='text-2xl border rounded transition hover:bg-gray-800'>
+                        {props.categories.map((value, index, array)=><div key={`category_${index}`} className='text-2xl border rounded transition hover:bg-gray-800'>
                             <Link className=' px-4 py-10 grid place-items-center capitalize' href={route('gallery', value)}>
-                                {value}
+                                {value.name}
                             </Link>
                         </div>)}
                     </div>

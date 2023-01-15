@@ -1,15 +1,15 @@
 import { Props } from '@/types/props.type';
 import { Head, useForm } from '@inertiajs/inertia-react';
 import { Navbar } from '@/Components/Navbar';
-import { useCategories } from '@/hooks/useCategories';
 import { FormEvent, useEffect, useState } from 'react';
 import {Inertia} from "@inertiajs/inertia";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {faTrash, faX, faPen} from '@fortawesome/free-solid-svg-icons'
 import { UploadForms } from '@/Components/UploadForms';
+import { Category } from './Home';
 
 export interface img {
-    category: string,
+    category: Category,
     created_at: string,
     id: number,
     user_id: number,
@@ -18,7 +18,7 @@ export interface img {
     user_name: string
 }
 
-export default function Gallery(props: Props<{ category: string, imgs: img[]}>) {
+export default function Gallery(props: Props<{ category: Category, imgs: img[]}>) {
     const [showUploadForm, setShowUploadForm] = useState<boolean>(false)
     const [showEditForm, setShowEditForm] = useState<boolean>(false)
     const [selectedEditImg, setSeletectedEditImg] = useState<img|null>(null)
@@ -57,7 +57,7 @@ export default function Gallery(props: Props<{ category: string, imgs: img[]}>) 
 
             <main className=' flex flex-col gap-4 p-4'>
                 <div className='flex justify-between'>
-                    <div className='text-2xl capitalize'>{props.category}</div>
+                    <div className='text-2xl capitalize'>{props.category.name}</div>
                     <button onClick={()=>setShowUploadForm(true)} className='border rounded px-2'>UPLOAD</button>
                 </div>
                 <div className='flex flex-col md:flex-row md:flex-wrap gap-4 justify-start  '>

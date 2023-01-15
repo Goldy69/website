@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Img;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\File;
@@ -9,20 +10,20 @@ use Inertia\Inertia;
 
 class GalleryController extends Controller
 {
-    public function show(string $category)
+    public function show(Category $category)
     {
         return Inertia::render('Gallery', ['category' => $category, 'foreCloseUploadForm' => true, "imgs" => $this->get_imgs($category)]);
     }
 
     public function destroy(Img $img){
-        $category = $img->category;
+        $category = $img->category()->first();
         $img->delete();
         return  to_route('gallery', [
             'category' => $category
         ]);
     }
 
-    public function create(Request $request, string $category)
+    public function create(Request $request, Category $category)
     {
         $request->validate([
             'img' => ['required', File::image()->max(12 * 1024)],
@@ -32,7 +33,7 @@ class GalleryController extends Controller
         $user = $request->user();
         $user->imgs()->create([
             "name" => $img_saved,
-            "category" => $category
+            "category_id" => $category->id
         ]);
         return  to_route('gallery', [
             'category' => $category
@@ -44,7 +45,7 @@ class GalleryController extends Controller
         $request->validate([
             'img' => ['required', File::image()->max(12 * 1024)],
         ]);
-        $category = $img->category;
+        $category = $img->category()->first();
         $file = $request->file('img');
         $img_saved = $file->store('public/imgs');
         $img->update([
@@ -56,7 +57,7 @@ class GalleryController extends Controller
         ]);
     }
 
-    private function get_imgs(string $category){
-        return Img::where('category', $category)->join('users', 'users.id', 'imgs.user_id')->select('imgs.*', 'users.name as user_name')->get();
+    private function get_imgs(Category $category){
+        return Img::join('categories', 'categories.id', 'imgs.category_id')->join('users', 'users.id', 'imgs.user_id')->where('categories.id', $category->id)->select('imgs.*', 'users.name as user_name')->get();
     }
 }

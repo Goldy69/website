@@ -1,7 +1,8 @@
+import { Category } from "@/Pages/Home";
 import { useForm } from "@inertiajs/inertia-react";
 import { FormEvent, useEffect, useState } from "react"
 
-export function UploadForms({ category, setShowUploadForm, showUploadForm, update_img, title, update}:{category: string, showUploadForm: boolean, setShowUploadForm: (state: boolean)=>void, title: string, update: boolean, update_img?: number}) {
+export function UploadForms({ category, setShowUploadForm, showUploadForm, update_img, title, update}:{category: Category, showUploadForm: boolean, setShowUploadForm: (state: boolean)=>void, title: string, update: boolean, update_img?: number}) {
 
 
     const { data, setData, post, patch , processing, errors, reset } = useForm<{
