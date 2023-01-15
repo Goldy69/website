@@ -5,9 +5,10 @@ import { useCategories } from '@/hooks/useCategories';
 import { FormEvent, useEffect, useState } from 'react';
 import {Inertia} from "@inertiajs/inertia";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faTrash, faX} from '@fortawesome/free-solid-svg-icons'
+import {faTrash, faX, faPen} from '@fortawesome/free-solid-svg-icons'
+import { UploadForms } from '@/Components/UploadForms';
 
-interface img {
+export interface img {
     category: string,
     created_at: string,
     id: number,
@@ -17,30 +18,21 @@ interface img {
     user_name: string
 }
 
-export default function Gallery(props: Props<{ category: string, foreCloseUploadForm: boolean, imgs: img[]}>) {
+export default function Gallery(props: Props<{ category: string, imgs: img[]}>) {
     const [showUploadForm, setShowUploadForm] = useState<boolean>(false)
+    const [showEditForm, setShowEditForm] = useState<boolean>(false)
+    const [selectedEditImg, setSeletectedEditImg] = useState<img|null>(null)
     const [imgUrl, setImgUrl] = useState<string|undefined>(undefined)
 
-    const { data, setData, post, processing, errors, reset } = useForm<{
-        img: null | File,
-    }>({
-        img: null,
-    });
-
-    useEffect(()=>{
-        if (props.foreCloseUploadForm) {
-            setShowUploadForm(false);
-            reset();
-        }
-    }, [props.foreCloseUploadForm])
-
-    function onSubmit(e: FormEvent) {
-        e.preventDefault()
-        post(route('gallery', props.category));
-    }
+    console.log(props)
 
     const  deleteImg = (id: number) => { 
         Inertia.delete(route('gallery', id));
+    }
+
+    const clickEdit = (img: img) => {
+        setSeletectedEditImg(img);
+        setShowEditForm(true);
     }
 
     return <>
@@ -49,18 +41,8 @@ export default function Gallery(props: Props<{ category: string, foreCloseUpload
 
 
         <div className=" relative gap-2 flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
-            {(showUploadForm  || errors.img) && <div className='fixed z-10 bg-gray-900/60 top-0 left-0 w-screen h-screen grid place-items-center'>
-                <form onSubmit={(e)=>onSubmit(e)} className='bg-gray-800 flex flex-col gap-4  px-5 py-10'>
-                    <h3 className='text-center font-bold text-2xl pb-5'>UPLOAD IMAGE</h3>
-                    <label htmlFor='img'>Image</label>
-                    {errors.img && <div className='text-red-600'>{errors.img}</div>}
-                    <input onChange={e => setData('img', e.target.files ? e.target.files[0] : null)} id='img' name='img' type="file" accept="image/png, image/gif, image/jpeg" />
-                    <div className='mt-5 flex justify-between'>
-                        <input className='border rounded px-2' type='submit' value='UPLOAD'/>
-                        <button onClick={()=>setShowUploadForm(false)} className='border rounded px-2'>CANCEL</button>
-                    </div>
-                </form>
-            </div> }
+            {(showUploadForm) &&  <UploadForms {...props} update={false} title="UPLOAD IMAGE" showUploadForm={showUploadForm} setShowUploadForm={setShowUploadForm}/>}
+            {(showEditForm) &&  <UploadForms {...props} update={true} update_img={selectedEditImg?.id} title="CHANGE IMAGE" showUploadForm={showEditForm} setShowUploadForm={setShowEditForm}/>}
 
             {imgUrl && <div className='fixed z-10 bg-gray-900/60 top-0 left-0 w-screen h-screen grid place-items-center'>
                     <div className='border-2 relative mx-2'>
@@ -90,6 +72,11 @@ export default function Gallery(props: Props<{ category: string, foreCloseUpload
                                     <div  className=' text-red-600 font-bold w-full text-[1.5rem] leading-8 my-2 px-2 overflow-hidden text-ellipsis self-start bg-white rounded' >
                                         {img.user_name}
                                     </div>
+
+                                    {props.auth.user.id === img.user_id && <button className=' text-red-600 self-start py-2' onClick={()=>clickEdit(img)}>
+                                        <FontAwesomeIcon className='bg-white rounded-full p-2 aspect-square' icon={faPen} />
+                                    </button>
+                                    }
 
                                     {props.auth.user.id === img.user_id && <button className=' text-red-600 self-start py-2' onClick={()=>deleteImg(img.id)}>
                                         <FontAwesomeIcon className='bg-white rounded-full p-2 aspect-square' icon={faTrash} />

@@ -11,8 +11,7 @@ class GalleryController extends Controller
 {
     public function show(string $category)
     {
-        $imgs = Img::where('category', $category)->join('users', 'users.id', 'imgs.user_id')->select('imgs.*', 'users.name as user_name')->get();
-        return Inertia::render('Gallery', ['category' => $category, 'foreCloseUploadForm' => false, "imgs" => $imgs]);
+        return Inertia::render('Gallery', ['category' => $category, 'foreCloseUploadForm' => true, "imgs" => $this->get_imgs($category)]);
     }
 
     public function destroy(Img $img){
@@ -40,5 +39,24 @@ class GalleryController extends Controller
         ]);
     }
 
+    public function update(Img $img, Request $request)
+    {
+        $request->validate([
+            'img' => ['required', File::image()->max(12 * 1024)],
+        ]);
+        $category = $img->category;
+        $file = $request->file('img');
+        $img_saved = $file->store('public/imgs');
+        $img->update([
+            'name' => $img_saved
+        ]);
+        
+        return  to_route('gallery', [
+            'category' => $category
+        ]);
+    }
 
+    private function get_imgs(string $category){
+        return Img::where('category', $category)->join('users', 'users.id', 'imgs.user_id')->select('imgs.*', 'users.name as user_name')->get();
+    }
 }
