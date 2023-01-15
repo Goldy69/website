@@ -16,6 +16,8 @@ interface img {
 
 export default function Gallery(props: Props<{ category: string, foreCloseUploadForm: boolean, imgs: img[]}>) {
     const [showUploadForm, setShowUploadForm] = useState<boolean>(false)
+    const [imgUrl, setImgUrl] = useState<string|undefined>(undefined)
+
     const { data, setData, post, processing, errors, reset } = useForm<{
         img: null | File,
     }>({
@@ -34,7 +36,7 @@ export default function Gallery(props: Props<{ category: string, foreCloseUpload
         post(route('gallery', props.category));
     }
 
-    const  deleteImg = (id: number) => {
+    const  deleteImg = (id: number) => { 
         Inertia.delete(route('gallery', id));
     }
 
@@ -44,7 +46,7 @@ export default function Gallery(props: Props<{ category: string, foreCloseUpload
 
 
         <div className=" relative gap-2 flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
-            {(showUploadForm  || errors.img) && <div className='fixed bg-gray-900/60 top-0 left-0 w-screen h-screen grid place-items-center'>
+            {(showUploadForm  || errors.img) && <div className='fixed z-10 bg-gray-900/60 top-0 left-0 w-screen h-screen grid place-items-center'>
                 <form onSubmit={(e)=>onSubmit(e)} className='bg-gray-800 flex flex-col gap-4  px-5 py-10'>
                     <h3 className='text-center font-bold text-2xl pb-5'>UPLOAD IMAGE</h3>
                     <label htmlFor='img'>Image</label>
@@ -56,6 +58,15 @@ export default function Gallery(props: Props<{ category: string, foreCloseUpload
                     </div>
                 </form>
             </div> }
+
+            {imgUrl && <div className='fixed z-10 bg-gray-900/60 top-0 left-0 w-screen h-screen grid place-items-center'>
+                    <div className='border-2 relative mx-2'>
+                        <img src={imgUrl}></img>
+                        <button className=' absolute top-0 right-0 text-red-600 font-bold text-[2rem]' onClick={()=>setImgUrl(undefined)}>
+                                X
+                            </button>
+                    </div>
+                </div>}
 
             <Navbar user={props.auth.user}/>
 
@@ -69,12 +80,7 @@ export default function Gallery(props: Props<{ category: string, foreCloseUpload
                         const backgroundUrl = img.name.replace('public/', 'storage/');
                         const backgroundImage = `url('/${backgroundUrl}')`;
                         return <div className='relative' key={`img_${index}`}>
-                            <div onClick={()=>window.open(`/${backgroundUrl}`,'_blank')} className='bg-center bg-cover bg-red-600 aspect-square w-full md:w-60 rounded ' style={{backgroundImage}}>
-
-
-
-
-                            </div>
+                            <div onClick={()=>setImgUrl(`/${backgroundUrl}`)} className='bg-center bg-cover bg-red-600 aspect-square w-full md:w-60 rounded ' style={{backgroundImage}}></div>
                             <button className=' absolute top-0 right-0 text-red-600 font-bold text-[2rem]' onClick={()=>deleteImg(img.id)}>
                                 X
                             </button>
