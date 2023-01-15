@@ -15,6 +15,13 @@ class GalleryController extends Controller
         return Inertia::render('Gallery', ['category' => $category, 'foreCloseUploadForm' => false, "imgs" => $imgs]);
     }
 
+    public function destroy(Img $img){
+        $category = $img->category;
+        $img->delete();
+        $imgs = Img::where('category', $category)->get();
+        return Inertia::render('Gallery', ['category' => $category, 'foreCloseUploadForm' => false, "imgs" => $imgs]);
+    }
+
     public function create(Request $request, string $category)
     {
         $request->validate([

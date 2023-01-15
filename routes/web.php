@@ -38,5 +38,6 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/gallery/{category}', [GalleryController::class, 'show'])->name('gallery')->middleware(['auth']);
 Route::post('/gallery/{category}', [GalleryController::class, 'create'])->middleware(['auth']);
+Route::delete('/gallery/{img}', [GalleryController::class, 'destroy'])->middleware(['auth']);
 
 require __DIR__.'/auth.php';
