@@ -4,6 +4,8 @@ import { Navbar } from '@/Components/Navbar';
 import { useCategories } from '@/hooks/useCategories';
 import { FormEvent, useEffect, useState } from 'react';
 import {Inertia} from "@inertiajs/inertia";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faTrash, faX} from '@fortawesome/free-solid-svg-icons'
 
 interface img {
     category: string,
@@ -11,7 +13,8 @@ interface img {
     id: number,
     user_id: number,
     name: string,
-    updated_at: string
+    updated_at: string,
+    user_name: string
 }
 
 export default function Gallery(props: Props<{ category: string, foreCloseUploadForm: boolean, imgs: img[]}>) {
@@ -62,9 +65,9 @@ export default function Gallery(props: Props<{ category: string, foreCloseUpload
             {imgUrl && <div className='fixed z-10 bg-gray-900/60 top-0 left-0 w-screen h-screen grid place-items-center'>
                     <div className='border-2 relative mx-2'>
                         <img src={imgUrl}></img>
-                        <button className=' absolute top-0 right-0 text-red-600 font-bold text-[2rem]' onClick={()=>setImgUrl(undefined)}>
-                                X
-                            </button>
+                        <button className='   text-red-600 absolute top-0 right-0 font-bold text-[1.5rem]  ' onClick={()=>setImgUrl(undefined)}>
+                            <FontAwesomeIcon className='rounded-full aspect-square bg-white p-1' icon={faX} />
+                        </button>
                     </div>
                 </div>}
 
@@ -81,9 +84,23 @@ export default function Gallery(props: Props<{ category: string, foreCloseUpload
                         const backgroundImage = `url('/${backgroundUrl}')`;
                         return <div className='relative' key={`img_${index}`}>
                             <div onClick={()=>setImgUrl(`/${backgroundUrl}`)} className='bg-center bg-cover bg-red-600 aspect-square w-full md:w-60 rounded ' style={{backgroundImage}}></div>
-                            <button className=' absolute top-0 right-0 text-red-600 font-bold text-[2rem]' onClick={()=>deleteImg(img.id)}>
-                                X
-                            </button>
+                            <div className='transition opacity-0 hover:opacity-100 absolute top-0 right-0 w-full flex flex-col h-full'>
+                                <div className=' flex gap-2 justify-between px-2 '>
+                                    
+                                    <div  className=' text-red-600 font-bold w-full text-[1.5rem] leading-8 my-2 px-2 overflow-hidden text-ellipsis self-start bg-white rounded' >
+                                        {img.user_name}
+                                    </div>
+
+                                    {props.auth.user.id === img.user_id && <button className=' text-red-600 self-start py-2' onClick={()=>deleteImg(img.id)}>
+                                        <FontAwesomeIcon className='bg-white rounded-full p-2 aspect-square' icon={faTrash} />
+                                    </button>
+                                    }
+                                
+                                </div>
+                                <div onClick={()=>setImgUrl(`/${backgroundUrl}`)} className='w-full h-full'>
+
+                                </div>
+                            </div>
                         </div>
                         }
 

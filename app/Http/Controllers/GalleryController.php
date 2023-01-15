@@ -11,15 +11,16 @@ class GalleryController extends Controller
 {
     public function show(string $category)
     {
-        $imgs = Img::where('category', $category)->get();
+        $imgs = Img::where('category', $category)->join('users', 'users.id', 'imgs.user_id')->select('imgs.*', 'users.name as user_name')->get();
         return Inertia::render('Gallery', ['category' => $category, 'foreCloseUploadForm' => false, "imgs" => $imgs]);
     }
 
     public function destroy(Img $img){
         $category = $img->category;
         $img->delete();
-        $imgs = Img::where('category', $category)->get();
-        return Inertia::render('Gallery', ['category' => $category, 'foreCloseUploadForm' => false, "imgs" => $imgs]);
+        return  to_route('gallery', [
+            'category' => $category
+        ]);
     }
 
     public function create(Request $request, string $category)
@@ -30,11 +31,14 @@ class GalleryController extends Controller
         $file = $request->file('img');
         $img_saved = $file->store('public/imgs');
         $user = $request->user();
-        $img = $user->imgs()->create([
+        $user->imgs()->create([
             "name" => $img_saved,
             "category" => $category
         ]);
-        $imgs = Img::where('category', $category)->get();
-        return Inertia::render('Gallery', ['category' => $category, "foreCloseUploadForm" => true, "imgs" => $imgs]);
+        return  to_route('gallery', [
+            'category' => $category
+        ]);
     }
+
+
 }
