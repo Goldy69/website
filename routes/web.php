@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BrowseController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
@@ -18,6 +19,8 @@ use Inertia\Inertia;
 */
 
 Route::get('/', [HomeController::class, 'view'])->name('home');
+
+Route::get('/browse', [BrowseController::class, 'view'])->name('browse');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

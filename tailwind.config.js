@@ -14,6 +14,12 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+                lucky: ['Luckiest Guy', ...defaultTheme.fontFamily.sans]
+            },
+            backgroundImage: {
+                'lion': "url('/lion.jpg')",
+                'colors': "url('/colors.jpg')",
+                'cat': "url('/cat.png')",
             },
         },
     },
