@@ -12,8 +12,8 @@ export function Navbar({user}:{user: User | null}) {
             <Link href={route('home')}>CATIMG</Link>
         </h2>
         <div className='flex flex-col sm:flex-row gap-2 items-center'>
-            <LinkWhite routeName='login'>Contact</LinkWhite>
-            <LinkWhite routeName='login'>About</LinkWhite>
+            <LinkWhite routeName='contact'>Contact</LinkWhite>
+            <LinkWhite routeName='about'>About</LinkWhite>
             {user ? (
                 <LinkRed routeName='logout'>Logout</LinkRed>
             ) : (
