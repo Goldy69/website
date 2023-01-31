@@ -12,7 +12,7 @@ class GalleryController extends Controller
 {
     public function show(Category $category)
     {
-        return Inertia::render('Gallery', ['category' => $category, 'foreCloseUploadForm' => true, "imgs" => $this->get_imgs($category)]);
+        return Inertia::render('Gallery', ['category' => $category, "imgs" => $this->get_imgs($category)]);
     }
 
     public function destroy(Img $img){
@@ -51,7 +51,7 @@ class GalleryController extends Controller
         $img->update([
             'name' => $img_saved
         ]);
-        
+
         return  to_route('gallery', [
             'category' => $category
         ]);
